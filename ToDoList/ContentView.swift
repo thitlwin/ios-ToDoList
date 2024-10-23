@@ -8,14 +8,51 @@
 import SwiftUI
 
 struct ContentView: View {
+    @State var checklistItems = [
+        "Take vocal lessons",
+          "Record hit single",
+          "Learn every martial art",
+          "Design costume",
+          "Design crime-fighting vehicle",
+          "Come up with superhero name",
+          "Befriend space raccoon",
+          "Save the world",
+          "Star in blockbuster movie",
+        ]
+        
+                          
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
+        NavigationView {
+            List {
+                ForEach(checklistItems, id: \.self) { item in
+                    Text(item)
+                }
+                .onDelete(perform: self.deleteListItem)
+                .onMove(perform: self.moveListItem)
+            }
+            .onAppear() {
+                printChecklistContents()
+            }
+            .listStyle(GroupedListStyle())
+            .navigationBarItems(trailing: EditButton())
+            .navigationBarTitle("Checklist")
         }
-        .padding()
+    }
+    
+    func printChecklistContents() {
+        for item in checklistItems {
+            print(item)
+        }
+    }
+    
+    func deleteListItem(whichElement: IndexSet) {
+      checklistItems.remove(atOffsets: whichElement)
+      printChecklistContents()
+    }
+    
+    func moveListItem(whichElement: IndexSet, destination: Int) {
+      checklistItems.move(fromOffsets: whichElement, toOffset: destination)
+      printChecklistContents()
     }
 }
 
